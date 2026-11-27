@@ -31,20 +31,29 @@ jobs:
         run: |
           mkdir -p extracted site
           unzip -q AETHER_CITADEL_PAGES_READY-1.zip -d extracted
+
           PACKAGE_FILE="$(find extracted -name package.json -not -path '*/node_modules/*' -print -quit)"
+
           if [ -n "$PACKAGE_FILE" ]; then
             PROJECT_DIR="$(dirname "$PACKAGE_FILE")"
             cd "$PROJECT_DIR"
-            npm ci
-            npm run build -- --base=/aether-citadel/
-            test -d dist
-            cp -a dist/. "$GITHUB_WORKSPACE/site/"
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
           else
             INDEX_FILE="$(find extracted -name index.html -print -quit)"
             test -n "$INDEX_FILE"
             PROJECT_DIR="$(dirname "$INDEX_FILE")"
-            cp -a "$PROJECT_DIR"/. "$GITHUB_WORKSPACE/site/"
+            cd "$PROJECT_DIR"
+            npm init -y
+            npm install --no-audit --no-fund vite@6 three@0.170.0
           fi
+
+          npx vite build --base=/aether-citadel/
+          test -d dist
+          cp -a dist/. "$GITHUB_WORKSPACE/site/"
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
