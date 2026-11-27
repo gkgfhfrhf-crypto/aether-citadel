@@ -54,6 +54,9 @@ jobs:
           npx vite build --base=/aether-citadel/
           test -d dist
           cp -a dist/. "$GITHUB_WORKSPACE/site/"
+          test -d tex
+          mkdir -p "$GITHUB_WORKSPACE/site/tex"
+          cp -a tex/. "$GITHUB_WORKSPACE/site/tex/"
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
