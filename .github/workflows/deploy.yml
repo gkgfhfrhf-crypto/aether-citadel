@@ -30,7 +30,7 @@ jobs:
       - name: Extract and build project
         run: |
           mkdir -p extracted site
-          unzip -q AETHER_CITADEL_PAGES_READY-1.zip -d extracted
+          unzip -q AETHER_CITADEL_PAGES_READY_FIXED.zip -d extracted
 
           PACKAGE_FILE="$(find extracted -name package.json -not -path '*/node_modules/*' -print -quit)"
 
